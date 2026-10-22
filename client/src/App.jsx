@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Sparkles, 
   Search, 
   Zap, 
   BarChart3, 
@@ -14,7 +13,7 @@ import {
   Layers,
   Globe2,
   Terminal,
-  CheckCircle2
+  Sparkles
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -41,15 +40,15 @@ export default function App() {
       setTimeout(() => {
         setAnalysisResult({
           swot: {
-            strengths: "Speedy execution, proprietary Groq integration",
-            weaknesses: "Early brand awareness",
-            opportunities: "Untapped SMB intelligence market",
-            threats: "Rapidly changing LLM ecosystem"
+            strengths: "Proprietary sub-100ms market synthesis and hardware-accelerated processing.",
+            weaknesses: "Early brand awareness in crowded enterprise sectors.",
+            opportunities: "Rapid expansion into automated competitor radar analysis.",
+            threats: "Fast-evolving foundation model capabilities."
           },
-          gaps: "Competitors lack real-time sub-100ms market synthesis.",
-          strategy: "Target hyper-growth tech founders with instant SWOT radar dashboards."
+          gaps: "Existing industry rivals lack real-time sub-100ms deep SWOT analysis.",
+          strategy: "Target hyper-growth SaaS and tech founders with instant market radar insights."
         });
-      }, 1500);
+      }, 2000);
     } finally {
       setLoading(false);
     }
@@ -65,26 +64,22 @@ export default function App() {
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#090d16]/70 border-b border-white/10 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           
-          {/* Logo */}
-          <div className="flex items-center space-x-3 cursor-pointer group">
-            <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 via-indigo-500 to-cyan-400 p-[1.5px] shadow-lg shadow-purple-500/20 group-hover:shadow-purple-500/40 transition-all duration-300">
-              <div className="w-full h-full bg-[#0d1322] rounded-[10px] flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-tr from-purple-600/30 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="relative flex items-center justify-center">
-                  <Cpu className="w-4 h-4 text-cyan-400 absolute opacity-40 group-hover:scale-110 transition-transform" />
-                  <Sparkles className="w-4 h-4 text-purple-400 relative z-10 group-hover:rotate-12 transition-transform duration-300" />
-                </div>
-              </div>
-            </div>
+          {/* Clean Typography Logo */}
+          <div className="flex items-center space-x-1 cursor-pointer group">
+            <span className="text-2xl font-black tracking-tight text-white group-hover:text-purple-200 transition-colors">
+              Zyris
+            </span>
+            <span className="text-2xl font-black tracking-tight bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
+              AI
+            </span>
+          </div>
 
-            <div className="flex items-center space-x-2">
-              <span className="text-xl font-extrabold tracking-tight text-white group-hover:text-purple-200 transition-colors">
-                Zyris
-              </span>
-              <span className="text-[10px] font-black tracking-widest px-2 py-0.5 rounded-md bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-sm shadow-purple-500/30">
-                AI
-              </span>
-            </div>
+          {/* Middle Header Tagline */}
+          <div className="hidden md:flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/[0.03] border border-white/10 text-xs text-gray-300 backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
+            <span className="font-medium tracking-wide bg-gradient-to-r from-gray-200 via-purple-300 to-cyan-300 bg-clip-text text-transparent">
+              ⚡ Next-Gen Market Intelligence
+            </span>
           </div>
 
           {/* Right Header Controls */}
@@ -124,7 +119,7 @@ export default function App() {
           </p>
         </motion.div>
 
-        {/* Input Form Glass Box */}
+        {/* Search Input Glass Box */}
         <motion.form 
           onSubmit={handleAnalyze}
           initial={{ opacity: 0, y: 30 }}
@@ -173,14 +168,34 @@ export default function App() {
         </motion.form>
       </section>
 
-      {/* Analysis Output Grid */}
+      {/* Animated Loading State Component */}
       <AnimatePresence>
-        {analysisResult && (
+        {loading && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="px-6 py-12 max-w-2xl mx-auto text-center"
+          >
+            <div className="relative inline-flex items-center justify-center mb-6">
+              <div className="w-20 h-20 rounded-full border-2 border-purple-500/20 border-t-purple-500 animate-spin" />
+              <Sparkles className="w-8 h-8 text-cyan-400 absolute animate-pulse" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">Synthesizing Market Intelligence...</h3>
+            <p className="text-sm text-gray-400">Groq LLMs are evaluating market parameters for <span className="text-purple-300 font-semibold">{businessName}</span></p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Analysis Output Results Grid */}
+      <AnimatePresence>
+        {analysisResult && !loading && (
           <section className="px-6 py-12 max-w-6xl mx-auto">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.5 }}
               className="space-y-6"
             >
               <div className="flex items-center space-x-3 mb-4">
@@ -189,29 +204,44 @@ export default function App() {
               </div>
 
               <div className="grid md:grid-cols-3 gap-6">
-                <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10 backdrop-blur-xl">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                  className="p-6 rounded-2xl bg-white/[0.02] border border-white/10 backdrop-blur-xl"
+                >
                   <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center mb-4 text-purple-400">
                     <BarChart3 className="w-5 h-5" />
                   </div>
-                  <h3 className="text-lg font-semibold text-white mb-2">SWOT Summary</h3>
+                  <h3 className="text-lg font-semibold text-white mb-2">SWOT Analysis</h3>
                   <p className="text-sm text-gray-400 leading-relaxed">{analysisResult.swot.strengths}</p>
-                </div>
+                </motion.div>
 
-                <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10 backdrop-blur-xl">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="p-6 rounded-2xl bg-white/[0.02] border border-white/10 backdrop-blur-xl"
+                >
                   <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center mb-4 text-cyan-400">
                     <Target className="w-5 h-5" />
                   </div>
                   <h3 className="text-lg font-semibold text-white mb-2">Competitor Gaps</h3>
                   <p className="text-sm text-gray-400 leading-relaxed">{analysisResult.gaps}</p>
-                </div>
+                </motion.div>
 
-                <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10 backdrop-blur-xl">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="p-6 rounded-2xl bg-white/[0.02] border border-white/10 backdrop-blur-xl"
+                >
                   <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center mb-4 text-emerald-400">
                     <TrendingUp className="w-5 h-5" />
                   </div>
                   <h3 className="text-lg font-semibold text-white mb-2">Actionable Strategy</h3>
                   <p className="text-sm text-gray-400 leading-relaxed">{analysisResult.strategy}</p>
-                </div>
+                </motion.div>
               </div>
             </motion.div>
           </section>
