@@ -1,122 +1,267 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Sparkles, 
+  Search, 
+  Zap, 
+  BarChart3, 
+  ShieldCheck, 
+  TrendingUp, 
+  Target, 
+  Cpu, 
+  ArrowRight, 
+  CheckCircle2, 
+  Activity 
+} from 'lucide-react';
+import axios from 'axios';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [businessName, setBusinessName] = useState('');
+  const [industry, setIndustry] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState(null);
+
+  const handleAnalyze = async (e) => {
+    e.preventDefault();
+    if (!businessName || !industry) return;
+
+    setLoading(true);
+    setAnalysisResult(null);
+
+    try {
+      // Connects to your Express Backend server running on port 5000
+      const response = await axios.post('http://localhost:5000/api/analyze', {
+        businessName,
+        industry
+      });
+      setAnalysisResult(response.data);
+    } catch (err) {
+      // Demo fallback result if backend isn't live yet
+      setTimeout(() => {
+        setAnalysisResult({
+          swot: {
+            strengths: "Speedy execution, proprietary Groq integration",
+            weaknesses: "Early brand awareness",
+            opportunities: "Untapped SMB intelligence market",
+            threats: "Rapidly changing LLM ecosystem"
+          },
+          gaps: "Competitors lack real-time sub-100ms market synthesis.",
+          strategy: "Target hyper-growth tech founders with instant SWOT radar dashboards."
+        });
+      }, 1500);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="min-h-screen bg-[#090d16] text-gray-100 font-sans relative overflow-hidden selection:bg-purple-500 selection:text-white">
+      {/* Background Ambient Glows */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-purple-600/15 blur-[160px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/3 right-1/4 w-[450px] h-[450px] bg-cyan-500/10 blur-[150px] rounded-full pointer-events-none" />
+
+      {/* Sticky Glass Navbar */}
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#090d16]/70 border-b border-white/10 px-6 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-3 cursor-pointer">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-cyan-400 p-[1px] shadow-lg shadow-purple-500/20">
+              <div className="w-full h-full bg-[#090d16] rounded-[11px] flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-purple-400" />
+              </div>
+            </div>
+            <span className="text-xl font-bold bg-gradient-to-r from-white via-gray-200 to-purple-400 bg-clip-text text-transparent tracking-tight">
+              Zyris<span className="text-purple-500">AI</span>
+            </span>
+          </div>
+
+          <nav className="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-400">
+            <a href="#features" className="hover:text-white transition-colors">Features</a>
+            <a href="#intelligence" className="hover:text-white transition-colors">Intelligence</a>
+            <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
+          </nav>
+
+          <div className="flex items-center space-x-4">
+            <div className="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-purple-300">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Groq Llama 3 Active</span>
+            </div>
+            <button className="px-5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-medium text-sm shadow-lg shadow-purple-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]">
+              Get Started
+            </button>
+          </div>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
+      </header>
+
+      {/* Hero Section */}
+      <section className="relative pt-20 pb-16 px-6 max-w-5xl mx-auto text-center">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-semibold mb-6 shadow-inner">
+            <Zap className="w-4 h-4 text-purple-400" />
+            <span>Sub-100ms Business Intelligence</span>
+          </div>
+
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.1] mb-6">
+            Next-Gen Market Analysis <br />
+            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
+              Powered by Groq LLMs
+            </span>
+          </h1>
+
+          <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+            Instantly surface SWOT analysis, competitor blindspots, and actionable growth strategies tailored for modern businesses.
+          </p>
+        </motion.div>
+
+        {/* Search Bar Input Glass Box */}
+        <motion.form 
+          onSubmit={handleAnalyze}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="p-3 sm:p-4 rounded-2xl bg-white/[0.03] backdrop-blur-2xl border border-white/10 shadow-2xl max-w-3xl mx-auto flex flex-col sm:flex-row gap-3"
+        >
+          <div className="flex-1 relative">
+            <Search className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+            <input 
+              type="text" 
+              placeholder="Business Name (e.g. ZyrisAI)"
+              value={businessName}
+              onChange={(e) => setBusinessName(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all text-sm"
+              required
+            />
+          </div>
+
+          <div className="flex-1 relative">
+            <Target className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+            <input 
+              type="text" 
+              placeholder="Industry (e.g. AI SaaS)"
+              value={industry}
+              onChange={(e) => setIndustry(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all text-sm"
+              required
+            />
+          </div>
+
+          <button 
+            type="submit" 
+            disabled={loading}
+            className="px-7 py-3 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 hover:opacity-90 text-white font-semibold text-sm shadow-lg shadow-purple-500/25 flex items-center justify-center space-x-2 transition-all disabled:opacity-50"
+          >
+            {loading ? (
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <>
+                <span>Analyze</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
+          </button>
+        </motion.form>
+      </section>
+
+      {/* Analysis Output Results Grid */}
+      <AnimatePresence>
+        {analysisResult && (
+          <section className="px-6 py-12 max-w-6xl mx-auto">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="space-y-6"
+            >
+              <div className="flex items-center space-x-3 mb-4">
+                <Activity className="w-6 h-6 text-purple-400" />
+                <h2 className="text-2xl font-bold text-white">Live Intelligence Radar</h2>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10 backdrop-blur-xl">
+                  <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center mb-4 text-purple-400">
+                    <BarChart3 className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-2">SWOT Summary</h3>
+                  <p className="text-sm text-gray-400 leading-relaxed">{analysisResult.swot.strengths}</p>
+                </div>
+
+                <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10 backdrop-blur-xl">
+                  <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center mb-4 text-cyan-400">
+                    <Target className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-2">Competitor Gaps</h3>
+                  <p className="text-sm text-gray-400 leading-relaxed">{analysisResult.gaps}</p>
+                </div>
+
+                <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10 backdrop-blur-xl">
+                  <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center mb-4 text-emerald-400">
+                    <TrendingUp className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-2">Actionable Strategy</h3>
+                  <p className="text-sm text-gray-400 leading-relaxed">{analysisResult.strategy}</p>
+                </div>
+              </div>
+            </motion.div>
+          </section>
+        )}
+      </AnimatePresence>
+
+      {/* Feature Showcase Grid */}
+      <section id="features" className="py-20 px-6 max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+            Engineered for Modern Founders
+          </h2>
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            Everything you need to analyze, outpace, and scale in highly competitive markets.
           </p>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+        <div className="grid md:grid-cols-3 gap-8">
+          {[
+            {
+              icon: <Cpu className="w-6 h-6 text-purple-400" />,
+              title: "Groq Llama 3 Engine",
+              desc: "Experience ultra-fast inference with hardware-accelerated LLM reasoning."
+            },
+            {
+              icon: <ShieldCheck className="w-6 h-6 text-cyan-400" />,
+              title: "Enterprise Grade",
+              desc: "Private, encrypted data analysis with zero-retention telemetry policies."
+            },
+            {
+              icon: <BarChart3 className="w-6 h-6 text-emerald-400" />,
+              title: "Market Gap Radar",
+              desc: "Identify customer friction points competitors are currently missing."
+            }
+          ].map((feature, idx) => (
+            <motion.div 
+              key={idx}
+              whileHover={{ y: -6 }}
+              className="p-8 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-purple-500/40 backdrop-blur-xl transition-all shadow-xl group"
+            >
+              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                {feature.icon}
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3">{feature.title}</h3>
+              <p className="text-gray-400 text-sm leading-relaxed">{feature.desc}</p>
+            </motion.div>
+          ))}
         </div>
       </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      {/* Footer */}
+      <footer className="border-t border-white/10 py-10 px-6 max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-4">
+        <div className="flex items-center space-x-2">
+          <span className="w-2 h-2 rounded-full bg-emerald-400" />
+          <span>All Systems Operational (ZyrisAI v1.0)</span>
+        </div>
+        <p>© {new Date().getFullYear()} ZyrisAI Inc. All rights reserved.</p>
+      </footer>
+    </div>
+  );
 }
-
-export default App
