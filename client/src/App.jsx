@@ -10,8 +10,11 @@ import {
   Target, 
   Cpu, 
   ArrowRight, 
-  CheckCircle2, 
-  Activity 
+  Activity,
+  Layers,
+  Globe2,
+  Terminal,
+  CheckCircle2
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -29,14 +32,12 @@ export default function App() {
     setAnalysisResult(null);
 
     try {
-      // Connects to your Express Backend server running on port 5000
       const response = await axios.post('http://localhost:5000/api/analyze', {
         businessName,
         industry
       });
       setAnalysisResult(response.data);
     } catch (err) {
-      // Demo fallback result if backend isn't live yet
       setTimeout(() => {
         setAnalysisResult({
           swot: {
@@ -60,26 +61,33 @@ export default function App() {
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-purple-600/15 blur-[160px] rounded-full pointer-events-none" />
       <div className="absolute top-1/3 right-1/4 w-[450px] h-[450px] bg-cyan-500/10 blur-[150px] rounded-full pointer-events-none" />
 
-      {/* Sticky Glass Navbar */}
+      {/* Sleek Minimalist Glass Navbar */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#090d16]/70 border-b border-white/10 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-3 cursor-pointer">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-cyan-400 p-[1px] shadow-lg shadow-purple-500/20">
-              <div className="w-full h-full bg-[#090d16] rounded-[11px] flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-purple-400" />
+          
+          {/* Logo */}
+          <div className="flex items-center space-x-3 cursor-pointer group">
+            <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 via-indigo-500 to-cyan-400 p-[1.5px] shadow-lg shadow-purple-500/20 group-hover:shadow-purple-500/40 transition-all duration-300">
+              <div className="w-full h-full bg-[#0d1322] rounded-[10px] flex items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-tr from-purple-600/30 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative flex items-center justify-center">
+                  <Cpu className="w-4 h-4 text-cyan-400 absolute opacity-40 group-hover:scale-110 transition-transform" />
+                  <Sparkles className="w-4 h-4 text-purple-400 relative z-10 group-hover:rotate-12 transition-transform duration-300" />
+                </div>
               </div>
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-white via-gray-200 to-purple-400 bg-clip-text text-transparent tracking-tight">
-              Zyris<span className="text-purple-500">AI</span>
-            </span>
+
+            <div className="flex items-center space-x-2">
+              <span className="text-xl font-extrabold tracking-tight text-white group-hover:text-purple-200 transition-colors">
+                Zyris
+              </span>
+              <span className="text-[10px] font-black tracking-widest px-2 py-0.5 rounded-md bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-sm shadow-purple-500/30">
+                AI
+              </span>
+            </div>
           </div>
 
-          <nav className="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-400">
-            <a href="#features" className="hover:text-white transition-colors">Features</a>
-            <a href="#intelligence" className="hover:text-white transition-colors">Intelligence</a>
-            <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
-          </nav>
-
+          {/* Right Header Controls */}
           <div className="flex items-center space-x-4">
             <div className="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-purple-300">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -116,7 +124,7 @@ export default function App() {
           </p>
         </motion.div>
 
-        {/* Search Bar Input Glass Box */}
+        {/* Input Form Glass Box */}
         <motion.form 
           onSubmit={handleAnalyze}
           initial={{ opacity: 0, y: 30 }}
@@ -165,7 +173,7 @@ export default function App() {
         </motion.form>
       </section>
 
-      {/* Analysis Output Results Grid */}
+      {/* Analysis Output Grid */}
       <AnimatePresence>
         {analysisResult && (
           <section className="px-6 py-12 max-w-6xl mx-auto">
@@ -210,8 +218,74 @@ export default function App() {
         )}
       </AnimatePresence>
 
+      {/* Live Metrics Banner */}
+      <section className="py-12 px-6 border-y border-white/5 bg-white/[0.01]">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <div>
+            <div className="text-3xl font-extrabold text-white mb-1">&lt; 100ms</div>
+            <div className="text-xs text-gray-500 font-medium uppercase tracking-wider">Llama 3 Latency</div>
+          </div>
+          <div>
+            <div className="text-3xl font-extrabold text-purple-400 mb-1">100%</div>
+            <div className="text-xs text-gray-500 font-medium uppercase tracking-wider">Zero-Data Retention</div>
+          </div>
+          <div>
+            <div className="text-3xl font-extrabold text-cyan-400 mb-1">24/7</div>
+            <div className="text-xs text-gray-500 font-medium uppercase tracking-wider">Autonomous Scanning</div>
+          </div>
+          <div>
+            <div className="text-3xl font-extrabold text-emerald-400 mb-1">Groq LPUs</div>
+            <div className="text-xs text-gray-500 font-medium uppercase tracking-wider">Hardware Accelerated</div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-24 px-6 max-w-6xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+            How ZyrisAI Delivers Market Intelligence
+          </h2>
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            From raw input to strategic growth roadmaps in three instant steps.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8 relative">
+          {[
+            {
+              step: "01",
+              title: "Input Entity & Market",
+              desc: "Provide your brand name and industry vertical to launch target market synthesis.",
+              icon: <Terminal className="w-6 h-6 text-purple-400" />
+            },
+            {
+              step: "02",
+              title: "Groq LPU Processing",
+              desc: "Groq hardware acceleration parses thousands of competitor data points instantly.",
+              icon: <Layers className="w-6 h-6 text-cyan-400" />
+            },
+            {
+              step: "03",
+              title: "Actionable Intelligence",
+              desc: "Receive structured SWOT analysis, competitor gap detection, and execution plans.",
+              icon: <Globe2 className="w-6 h-6 text-emerald-400" />
+            }
+          ].map((item, idx) => (
+            <div key={idx} className="p-8 rounded-2xl bg-white/[0.02] border border-white/10 backdrop-blur-xl relative">
+              <div className="text-4xl font-black text-white/10 absolute top-6 right-6">{item.step}</div>
+              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
+                {item.icon}
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3">{item.title}</h3>
+              <p className="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Feature Showcase Grid */}
-      <section id="features" className="py-20 px-6 max-w-7xl mx-auto">
+      <section className="pb-24 px-6 max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
             Engineered for Modern Founders
