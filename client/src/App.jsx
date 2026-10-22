@@ -61,14 +61,17 @@ export default function App() {
       <div className="absolute top-1/3 right-1/4 w-[450px] h-[450px] bg-cyan-500/10 blur-[150px] rounded-full pointer-events-none" />
 
       {/* Sleek Minimalist Glass Navbar */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#090d16]/70 border-b border-white/10 px-6 py-4">
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#090d16]/70 border-b border-white/10 px-6 py-3">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           
-          {/* Left Corner Container (Ready for your left icon/element) */}
-          <div className="flex items-center min-w-[140px]">
-            <div className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs text-purple-300 flex items-center space-x-2">
-              <span className="w-2 h-2 rounded-full bg-purple-400 animate-ping" />
-              <span className="font-medium text-gray-300">Left Item Slot</span>
+          {/* Top-Left Logo Integration */}
+          <div className="flex items-center space-x-3 cursor-pointer group min-w-[140px]">
+            <div className="relative w-10 h-10 rounded-xl overflow-hidden p-[1px] bg-gradient-to-tr from-cyan-400 to-purple-600 shadow-md shadow-cyan-500/20 group-hover:shadow-cyan-500/40 transition-all duration-300">
+              <img 
+                src="/logo.png" 
+                alt="ZyrisAI Logo" 
+                className="w-full h-full object-cover rounded-[11px] group-hover:scale-105 transition-transform duration-300"
+              />
             </div>
           </div>
 
