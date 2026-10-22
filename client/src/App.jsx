@@ -64,7 +64,15 @@ export default function App() {
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#090d16]/70 border-b border-white/10 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           
-          {/* Clean Typography Logo */}
+          {/* Left Corner Container (Ready for your left icon/element) */}
+          <div className="flex items-center min-w-[140px]">
+            <div className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs text-purple-300 flex items-center space-x-2">
+              <span className="w-2 h-2 rounded-full bg-purple-400 animate-ping" />
+              <span className="font-medium text-gray-300">Left Item Slot</span>
+            </div>
+          </div>
+
+          {/* Centered ZyrisAI Typography */}
           <div className="flex items-center space-x-1 cursor-pointer group">
             <span className="text-2xl font-black tracking-tight text-white group-hover:text-purple-200 transition-colors">
               Zyris
@@ -74,16 +82,8 @@ export default function App() {
             </span>
           </div>
 
-          {/* Middle Header Tagline */}
-          <div className="hidden md:flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/[0.03] border border-white/10 text-xs text-gray-300 backdrop-blur-md">
-            <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
-            <span className="font-medium tracking-wide bg-gradient-to-r from-gray-200 via-purple-300 to-cyan-300 bg-clip-text text-transparent">
-              ⚡ Next-Gen Market Intelligence
-            </span>
-          </div>
-
           {/* Right Header Controls */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 min-w-[140px] justify-end">
             <div className="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-purple-300">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span>Groq Llama 3 Active</span>
