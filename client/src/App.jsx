@@ -358,7 +358,7 @@ export default function App() {
 
         <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#030712]/80 border-b border-white/10 px-4 sm:px-6 py-3.5">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <motion.div whileHover={{ scale: 1.05 }} className="flex items-center space-x-2.5 cursor-pointer">
+            <div className="flex items-center space-x-2.5">
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-cyan-400 via-blue-500 to-indigo-600 p-[1px] shadow-lg shadow-cyan-500/20">
                 <div className="w-full h-full bg-[#0b1329] rounded-[11px] flex items-center justify-center">
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400 font-black text-base sm:text-lg">Z</span>
@@ -368,14 +368,14 @@ export default function App() {
                 <span className="text-xl sm:text-2xl font-black tracking-tight text-white">Zyris</span>
                 <span className="text-xl sm:text-2xl font-black tracking-tight bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">AI</span>
               </div>
-            </motion.div>
+            </div>
 
             <div className="flex items-center space-x-2 sm:space-x-4">
-              <motion.div whileHover={{ scale: 1.05 }} className="px-2.5 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-[11px] font-mono tracking-tight shrink-0 flex items-center space-x-1">
+              <div className="px-2.5 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-[11px] font-mono tracking-tight shrink-0 flex items-center space-x-1">
                 <span>⚡</span>
                 <span className="font-medium">{userProfile ? userProfile.credits : 2}</span>
                 <span className="hidden sm:inline text-cyan-400/70">Credits</span>
-              </motion.div>
+              </div>
 
               <div className="flex items-center space-x-2 sm:space-x-3 bg-white/[0.04] border border-white/10 px-2.5 sm:px-3.5 py-1.5 rounded-xl">
                 {user.photoURL ? (
@@ -384,9 +384,9 @@ export default function App() {
                   <User className="w-4 h-4 text-cyan-400" />
                 )}
                 <span className="text-xs font-medium text-white max-w-[100px] sm:max-w-none truncate">{user.displayName || user.email}</span>
-                <motion.button whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} onClick={handleLogout} className="text-gray-400 hover:text-rose-400 transition-colors p-1" title="Sign Out">
+                <button onClick={handleLogout} className="text-gray-400 hover:text-rose-400 transition-colors p-1" title="Sign Out">
                   <LogOut className="w-4 h-4" />
-                </motion.button>
+                </button>
               </div>
             </div>
           </div>
@@ -394,25 +394,15 @@ export default function App() {
 
         <main className="flex-1 flex items-center justify-center px-4 py-12 relative z-10">
           <motion.div 
-            initial={{ opacity: 0, scale: 0.9, y: 30 }}
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.6, type: 'spring', bounce: 0.3 }}
-            className="max-w-xl w-full text-center p-6 sm:p-12 rounded-3xl bg-[#080d1a] border border-cyan-500/20 shadow-2xl backdrop-blur-2xl relative overflow-hidden"
+            transition={{ duration: 0.5 }}
+            className="max-w-xl w-full text-center p-6 sm:p-12 rounded-3xl bg-[#080d1a] border border-white/10 shadow-2xl backdrop-blur-2xl relative overflow-hidden"
           >
-            <motion.div 
-              animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.1, 1] }} 
-              transition={{ repeat: Infinity, duration: 4 }} 
-              className="absolute -top-24 -left-24 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" 
-            />
-
-            <motion.div 
-              initial={{ scale: 0.8 }} 
-              animate={{ scale: 1 }} 
-              className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-semibold mb-6 shadow-inner"
-            >
+            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-semibold mb-6 shadow-inner">
               <Sparkles className="w-4 h-4 text-cyan-400 animate-pulse" />
               <span>VIP EARLY ACCESS CONFIRMED</span>
-            </motion.div>
+            </div>
 
             <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight mb-4">
               ZyrisAI Engine <br />
@@ -425,14 +415,12 @@ export default function App() {
               Welcome aboard, <span className="text-white font-semibold">{user.displayName || user.email}</span>! You are officially on the priority queue for our Groq LPU sub-100ms market reasoning engine.
             </p>
 
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <button 
               onClick={handleLogout}
-              className="px-6 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-gray-400 hover:text-white transition-all shadow-lg"
+              className="px-6 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-gray-400 hover:text-white transition-all"
             >
               Sign out of session
-            </motion.button>
+            </button>
           </motion.div>
         </main>
       </div>
@@ -442,18 +430,6 @@ export default function App() {
   // PUBLIC LANDING PAGE WITH INTERACTIVE TOOLS
   return (
     <div className="min-h-screen bg-[#030712] text-gray-100 font-sans relative overflow-x-hidden selection:bg-cyan-500 selection:text-white">
-      {/* Background Animated Ambient Glows */}
-      <motion.div 
-        animate={{ opacity: [0.2, 0.4, 0.2], scale: [1, 1.2, 1] }} 
-        transition={{ repeat: Infinity, duration: 8 }} 
-        className="fixed -top-40 -left-40 w-96 h-96 bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" 
-      />
-      <motion.div 
-        animate={{ opacity: [0.2, 0.5, 0.2], scale: [1, 1.2, 1] }} 
-        transition={{ repeat: Infinity, duration: 10, delay: 2 }} 
-        className="fixed -bottom-40 -right-40 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" 
-      />
-
       <AnimatePresence>
         {toast && (
           <motion.div 
@@ -473,7 +449,7 @@ export default function App() {
       {/* Header */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#030712]/80 border-b border-white/10 px-4 sm:px-8 py-3.5">
         <div className="max-w-7xl mx-auto flex items-center justify-between relative">
-          <motion.div whileHover={{ scale: 1.03 }} className="flex items-center space-x-3 cursor-pointer group">
+          <div className="flex items-center space-x-3 cursor-pointer group">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-400 via-blue-500 to-indigo-600 p-[1px] shadow-lg shadow-cyan-500/20">
               <div className="w-full h-full bg-[#0b1329] rounded-[11px] flex items-center justify-center">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400 font-black text-lg">Z</span>
@@ -483,20 +459,18 @@ export default function App() {
               <span className="text-2xl font-black tracking-tight text-white">Zyris</span>
               <span className="text-2xl font-black tracking-tight bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">AI</span>
             </div>
-          </motion.div>
+          </div>
 
           <div className="flex items-center space-x-3 sm:space-x-4">
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <button 
               onClick={() => { setIsSignUp(false); setIsForgotPassword(false); setShowAuthModal(true); }}
               className="px-4 py-2 text-xs font-semibold text-gray-300 hover:text-white transition-colors"
             >
               Sign In
-            </motion.button>
+            </button>
             <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
               onClick={() => { setIsSignUp(true); setIsForgotPassword(false); setShowAuthModal(true); }}
               className="px-4 sm:px-5 py-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 text-white font-medium text-xs sm:text-sm shadow-lg shadow-blue-600/25 transition-all flex items-center gap-1.5"
             >
@@ -509,14 +483,11 @@ export default function App() {
 
       {/* Hero Section */}
       <section className="relative pt-12 sm:pt-20 pb-12 sm:pb-16 px-4 sm:px-6 max-w-4xl mx-auto text-center">
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-          <motion.div 
-            whileHover={{ scale: 1.05 }} 
-            className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-[11px] font-semibold mb-6 shadow-inner cursor-pointer"
-          >
-            <Zap className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-[11px] font-semibold mb-6 shadow-inner">
+            <Zap className="w-3.5 h-3.5 text-cyan-400" />
             <span>SUB-100MS INTELLIGENCE ENGINE • V1.0 READY</span>
-          </motion.div>
+          </div>
 
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.15] mb-6">
             Next–Gen Business Intelligence <br />
@@ -534,17 +505,15 @@ export default function App() {
       {/* INTERACTIVE FEATURE #1: LIVE DEMO SIMULATOR */}
       <section className="px-4 sm:px-6 pb-16 max-w-4xl mx-auto">
         <motion.div 
-          initial={{ opacity: 0, y: 30 }} 
+          initial={{ opacity: 0, y: 20 }} 
           whileInView={{ opacity: 1, y: 0 }} 
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          whileHover={{ borderColor: 'rgba(6, 182, 212, 0.4)' }}
-          className="p-6 sm:p-8 rounded-3xl bg-[#080d1a] border border-cyan-500/30 shadow-2xl relative overflow-hidden backdrop-blur-xl transition-colors"
+          className="p-6 sm:p-8 rounded-3xl bg-[#080d1a] border border-cyan-500/30 shadow-2xl relative overflow-hidden"
         >
           <div className="flex items-center space-x-3 mb-4">
-            <motion.div whileHover={{ rotate: 180 }} transition={{ duration: 0.4 }} className="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+            <div className="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
               <Play className="w-5 h-5 fill-cyan-400" />
-            </motion.div>
+            </div>
             <div>
               <h2 className="text-lg sm:text-xl font-bold text-white">Interactive Strategy Simulator</h2>
               <p className="text-xs text-gray-400">Test drive the Groq LPU engine on any sample business instantly.</p>
@@ -557,12 +526,12 @@ export default function App() {
               placeholder="e.g., Lumina Coffee, Acme SaaS"
               value={demoInput}
               onChange={(e) => setDemoInput(e.target.value)}
-              className="sm:col-span-2 px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-all"
+              className="sm:col-span-2 px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400"
             />
             <select 
               value={demoIndustry} 
               onChange={(e) => setDemoIndustry(e.target.value)}
-              className="px-4 py-2.5 rounded-xl bg-[#0b1329] border border-white/10 text-xs text-white focus:outline-none focus:border-cyan-400 transition-all"
+              className="px-4 py-2.5 rounded-xl bg-[#0b1329] border border-white/10 text-xs text-white focus:outline-none focus:border-cyan-400"
             >
               <option value="E-Commerce">E-Commerce</option>
               <option value="B2B SaaS">B2B SaaS</option>
@@ -571,12 +540,10 @@ export default function App() {
             </select>
           </div>
 
-          <motion.button 
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+          <button 
             onClick={handleSimulateDemo}
             disabled={isSimulating}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold text-xs shadow-lg shadow-cyan-500/20 hover:opacity-90 transition-all flex items-center justify-center space-x-2"
+            className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold text-xs shadow-lg hover:opacity-90 transition-all flex items-center justify-center space-x-2"
           >
             {isSimulating ? (
               <>
@@ -589,18 +556,17 @@ export default function App() {
                 <span>Run Instant Analysis Preview</span>
               </>
             )}
-          </motion.button>
+          </button>
 
           {simulatedReport && (
             <motion.div 
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="mt-6 p-4 rounded-2xl bg-white/[0.02] border border-cyan-500/20 text-xs space-y-2 text-left shadow-inner"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className="mt-6 p-4 rounded-2xl bg-white/[0.02] border border-cyan-500/20 text-xs space-y-2 text-left"
             >
               <div className="flex justify-between items-center border-b border-white/10 pb-2">
                 <span className="font-bold text-cyan-300">{simulatedReport.name} ({simulatedReport.industry})</span>
-                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">{simulatedReport.executionTime}</span>
+                <span className="text-[10px] font-mono text-emerald-400">{simulatedReport.executionTime}</span>
               </div>
               <div className="grid grid-cols-2 gap-2 pt-1">
                 <div>
@@ -621,17 +587,15 @@ export default function App() {
       {/* INTERACTIVE FEATURE #2: ROI CALCULATOR */}
       <section className="px-4 sm:px-6 pb-16 max-w-4xl mx-auto">
         <motion.div 
-          initial={{ opacity: 0, y: 30 }} 
+          initial={{ opacity: 0, y: 20 }} 
           whileInView={{ opacity: 1, y: 0 }} 
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          whileHover={{ borderColor: 'rgba(255, 255, 255, 0.2)' }}
-          className="p-6 sm:p-8 rounded-3xl bg-[#080d1a] border border-white/10 shadow-2xl backdrop-blur-xl transition-colors"
+          className="p-6 sm:p-8 rounded-3xl bg-[#080d1a] border border-white/10 shadow-2xl"
         >
           <div className="flex items-center space-x-3 mb-6">
-            <motion.div whileHover={{ scale: 1.1 }} className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400">
+            <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400">
               <Calculator className="w-5 h-5" />
-            </motion.div>
+            </div>
             <div>
               <h2 className="text-lg sm:text-xl font-bold text-white">Interactive ROI Calculator</h2>
               <p className="text-xs text-gray-400">See how much engineering & strategy time ZyrisAI saves your team every month.</p>
@@ -657,26 +621,17 @@ export default function App() {
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-900/30 to-cyan-900/30 border border-cyan-500/30 flex items-center justify-between shadow-lg">
+          <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-900/30 to-cyan-900/30 border border-cyan-500/30 flex items-center justify-between">
             <div>
               <span className="text-[11px] text-gray-400 block uppercase font-mono">Estimated Monthly Savings</span>
-              <motion.span 
-                key={teamSize * hourlyRate}
-                initial={{ scale: 0.9, opacity: 0.8 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="text-2xl font-black text-emerald-400 block"
-              >
-                ${(teamSize * 10 * hourlyRate * 0.85).toLocaleString()}
-              </motion.span>
+              <span className="text-2xl font-black text-emerald-400">${(teamSize * 10 * hourlyRate * 0.85).toLocaleString()}</span>
             </div>
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <button 
               onClick={() => { setIsSignUp(true); setShowAuthModal(true); }}
-              className="px-4 py-2 rounded-xl bg-cyan-500 text-gray-900 font-bold text-xs hover:bg-cyan-400 transition-all shadow-lg shadow-cyan-500/20"
+              className="px-4 py-2 rounded-xl bg-cyan-500 text-gray-900 font-bold text-xs hover:bg-cyan-400 transition-all"
             >
               Claim Your Savings
-            </motion.button>
+            </button>
           </div>
         </motion.div>
       </section>
@@ -690,37 +645,20 @@ export default function App() {
             { q: "Is my business strategy data private?", a: "Yes! We operate on a strict Zero Data Retention model. Queries run in memory and are never saved or used to train public models." },
             { q: "How many free trial credits do I get?", a: "Every new account receives 2 free full-length strategy briefs upon account creation." }
           ].map((item, idx) => (
-            <motion.div 
-              key={idx} 
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
-              className="rounded-2xl bg-[#080d1a] border border-white/10 overflow-hidden backdrop-blur-xl"
-            >
+            <div key={idx} className="rounded-2xl bg-[#080d1a] border border-white/10 overflow-hidden">
               <button 
                 onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                className="w-full p-4 text-left text-xs sm:text-sm font-semibold text-white flex justify-between items-center hover:bg-white/[0.02] transition-colors"
+                className="w-full p-4 text-left text-xs sm:text-sm font-semibold text-white flex justify-between items-center hover:bg-white/[0.02]"
               >
                 <span>{item.q}</span>
-                <motion.div animate={{ rotate: openFaq === idx ? 180 : 0 }} transition={{ duration: 0.3 }}>
-                  <ChevronDown className="w-4 h-4 text-cyan-400" />
-                </motion.div>
+                <ChevronDown className={`w-4 h-4 text-cyan-400 transition-transform ${openFaq === idx ? 'rotate-180' : ''}`} />
               </button>
-              <AnimatePresence>
-                {openFaq === idx && (
-                  <motion.div 
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="p-4 pt-0 text-xs text-gray-400 border-t border-white/5 leading-relaxed"
-                  >
-                    {item.a}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
+              {openFaq === idx && (
+                <div className="p-4 pt-0 text-xs text-gray-400 border-t border-white/5 leading-relaxed">
+                  {item.a}
+                </div>
+              )}
+            </div>
           ))}
         </div>
       </section>
@@ -735,20 +673,17 @@ export default function App() {
             className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
           >
             <motion.div 
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              transition={{ type: 'spring', bounce: 0.2 }}
-              className="w-full max-w-md p-6 sm:p-8 rounded-3xl bg-[#080d1a] border border-cyan-500/20 shadow-2xl relative overflow-hidden"
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="w-full max-w-md p-6 sm:p-8 rounded-3xl bg-[#080d1a] border border-white/10 shadow-2xl relative"
             >
-              <motion.button 
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
+              <button 
                 onClick={() => { setShowAuthModal(false); setIsForgotPassword(false); setResetStep('email'); }}
-                className="absolute top-4 right-4 p-2 text-gray-400 hover:text-white rounded-full bg-white/5 transition-colors"
+                className="absolute top-4 right-4 p-2 text-gray-400 hover:text-white rounded-full bg-white/5"
               >
                 <X className="w-4 h-4" />
-              </motion.button>
+              </button>
 
               <div className="text-center mb-6">
                 <h3 className="text-xl font-bold text-white">
@@ -759,15 +694,15 @@ export default function App() {
               </div>
 
               {authError && (
-                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs text-center font-medium">
+                <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs text-center font-medium">
                   {authError}
-                </motion.div>
+                </div>
               )}
 
               {authSuccessMsg && (
-                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="mb-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs text-center font-medium">
+                <div className="mb-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs text-center font-medium">
                   {authSuccessMsg}
-                </motion.div>
+                </div>
               )}
 
               <form onSubmit={handleEmailAuth} className="space-y-3 mb-4">
@@ -779,7 +714,7 @@ export default function App() {
                     value={email}
                     disabled={isForgotPassword && resetStep !== 'email'}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-all"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400"
                   />
                 </div>
 
@@ -791,12 +726,12 @@ export default function App() {
                       placeholder="Password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-all"
+                      className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400"
                     />
                     <button 
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -830,41 +765,37 @@ export default function App() {
                     <button 
                       type="button"
                       onClick={() => setShowNewPassword(!showNewPassword)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
                     >
                       {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
                 )}
 
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                <button
                   type="submit"
                   disabled={authLoading}
-                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold text-xs shadow-lg shadow-cyan-500/20 hover:opacity-90 transition-all"
+                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold text-xs shadow-lg hover:opacity-90"
                 >
                   {authLoading ? 'Processing...' : (isForgotPassword ? (resetStep === 'email' ? 'Send OTP Code' : (resetStep === 'otp' ? 'Verify Code' : 'Save New Password')) : (isSignUp ? 'Sign Up' : 'Sign In'))}
-                </motion.button>
+                </button>
               </form>
 
               {!isForgotPassword && (
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                <button
                   onClick={handleGoogleSignIn}
                   disabled={authLoading}
-                  className="w-full py-2.5 px-4 rounded-xl bg-white text-gray-900 font-semibold text-xs flex items-center justify-center space-x-2.5 hover:bg-gray-100 transition-all shadow-md"
+                  className="w-full py-2.5 px-4 rounded-xl bg-white text-gray-900 font-semibold text-xs flex items-center justify-center space-x-2.5 hover:bg-gray-100"
                 >
                   <span>Continue with Google</span>
-                </motion.button>
+                </button>
               )}
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <footer className="border-t border-white/[0.08] py-8 text-center text-xs text-gray-500 relative z-10">
+      <footer className="border-t border-white/[0.08] py-8 text-center text-xs text-gray-500">
         © {new Date().getFullYear()} ZyrisAI Inc. All rights reserved.
       </footer>
     </div>
