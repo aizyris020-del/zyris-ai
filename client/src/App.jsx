@@ -421,7 +421,7 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* HEADER: Fully Responsive Layout */}
+      {/* HEADER */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#030712]/90 border-b border-white/10 px-4 sm:px-8 py-3.5">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
           
@@ -467,13 +467,8 @@ export default function App() {
       </header>
 
       {/* HERO SECTION */}
-      <section className="pt-12 sm:pt-16 pb-10 px-4 sm:px-6 max-w-4xl mx-auto text-center">
+      <section className="pt-10 sm:pt-14 pb-10 px-4 sm:px-6 max-w-4xl mx-auto text-center">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-[11px] font-semibold mb-6 shadow-inner">
-            <Zap className="w-3.5 h-3.5 text-cyan-400" />
-            <span>SUB-100MS INTELLIGENCE ENGINE • V1.0 READY</span>
-          </div>
-
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.15] mb-6">
             Next–Gen Business Intelligence <br />
             <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-400 bg-clip-text text-transparent">
@@ -495,7 +490,7 @@ export default function App() {
         </motion.div>
       </section>
 
-      {/* SIMPLIFIED EXPLANATION FEATURE CARDS (GRID FOR ALL DEVICES) */}
+      {/* SIMPLIFIED EXPLANATION FEATURE CARDS */}
       <section className="px-4 sm:px-6 md:px-8 pb-12 max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           
