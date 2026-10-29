@@ -36,7 +36,9 @@ import {
   Check,
   Sliders,
   Terminal,
-  Compass
+  Compass,
+  Search,
+  ShieldAlert
 } from 'lucide-react';
 import { 
   auth, 
@@ -68,7 +70,6 @@ export default function App() {
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState('');
   const [authSuccessMsg, setAuthSuccessMsg] = useState('');
-  const [apiResponse, setApiResponse] = useState(null);
 
   // Dynamic Toast Notification State
   const [toast, setToast] = useState(null);
@@ -80,7 +81,7 @@ export default function App() {
   const [isSimulating, setIsSimulating] = useState(false);
   const [simulatedReport, setSimulatedReport] = useState(null);
 
-  // 2. Interactive Feature Matrix State
+  // 2. Interactive Feature Tab State
   const [activeTab, setActiveTab] = useState('swot');
 
   // 3. Interactive FAQ Accordion State
@@ -131,7 +132,7 @@ export default function App() {
 
   const handleSimulateDemo = () => {
     if (!demoInput.trim()) {
-      showToast('Please enter a business or product name to simulate.', 'error');
+      showToast('Please enter a business or product name to test.', 'error');
       return;
     }
     setIsSimulating(true);
@@ -144,10 +145,10 @@ export default function App() {
         industry: demoIndustry,
         growthPotential: '+38.4%',
         opportunityScore: '92/100',
-        keyGap: `High demand for automated ${demoIndustry} delivery loops`,
+        keyGap: `High customer demand for instant automated ${demoIndustry} delivery`,
         executionTime: '88ms'
       });
-      showToast('Instant demo intelligence generated in 88ms!', 'success');
+      showToast('Analysis completed in 88 milliseconds!', 'success');
     }, 1200);
   };
 
@@ -208,7 +209,7 @@ export default function App() {
           if (!res.ok) throw new Error(data.message || 'Failed to send OTP.');
           
           setAuthSuccessMsg('A 6-digit verification code has been sent to your email.');
-          showToast('🔑 OTP Code sent! Please check your email inbox.', 'info');
+          showToast('🔑 OTP Code sent! Please check your inbox.', 'info');
           setResetStep('otp');
         } catch (err) {
           setAuthError(err.message);
@@ -232,8 +233,8 @@ export default function App() {
           const data = await res.json();
           if (!res.ok) throw new Error(data.message || 'OTP verification failed.');
 
-          setAuthSuccessMsg('OTP Code verified! Enter your new password below.');
-          showToast('✓ OTP Verified! Enter your new password.', 'success');
+          setAuthSuccessMsg('OTP Code verified! Set your new password.');
+          showToast('✓ OTP Verified!', 'success');
           setResetStep('new_password');
         } catch (err) {
           setAuthError(err.message);
@@ -257,7 +258,7 @@ export default function App() {
           const data = await res.json();
           if (!res.ok) throw new Error(data.message || 'Password update failed.');
 
-          showToast('🔐 Password updated successfully! You can now sign in.', 'success');
+          showToast('🔐 Password updated successfully!', 'success');
           setAuthSuccessMsg('Password reset completed! Please sign in with your new password.');
           setTimeout(() => {
             setIsForgotPassword(false);
@@ -288,7 +289,7 @@ export default function App() {
       if (isSignUp) {
         const newUser = await signUpWithEmail(email, password);
         sendWelcomeEmail(newUser.email, email.split('@')[0], newUser.uid);
-        showToast('Account created successfully! Welcome to ZyrisAI 🎉', 'success');
+        showToast('Account created successfully! Welcome 🎉', 'success');
       } else {
         await loginWithEmail(email, password);
         showToast('Signed in successfully! Welcome back 👋', 'success');
@@ -305,13 +306,12 @@ export default function App() {
   };
 
   const handleLogout = async () => {
-    setApiResponse(null);
     setUserProfile(null);
     await logoutUser();
     showToast('Signed out safely.', 'info');
   };
 
-  // PROTECTED DASHBOARD FOR AUTHENTICATED USER
+  // PROTECTED DASHBOARD FOR LOGGED-IN USER
   if (user) {
     return (
       <div className="min-h-screen bg-[#030712] text-gray-100 font-sans relative flex flex-col justify-between overflow-hidden selection:bg-cyan-500 selection:text-white">
@@ -376,25 +376,25 @@ export default function App() {
           >
             <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-semibold mb-6 shadow-inner">
               <Sparkles className="w-4 h-4 text-cyan-400 animate-pulse" />
-              <span>VIP EARLY ACCESS CONFIRMED</span>
+              <span>EARLY ACCESS ACTIVATED</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight mb-4">
-              ZyrisAI Engine <br />
+              ZyrisAI Dashboard <br />
               <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-400 bg-clip-text text-transparent">
-                Preparing for Deployment
+                Ready for Design Sync
               </span>
             </h1>
 
             <p className="text-gray-400 text-xs sm:text-base leading-relaxed mb-8">
-              Welcome aboard, <span className="text-white font-semibold">{user.displayName || user.email}</span>! You are officially on the priority queue for our Groq LPU sub-100ms market reasoning engine.
+              Welcome back, <span className="text-white font-semibold">{user.displayName || user.email}</span>! Your session is live.
             </p>
 
             <button 
               onClick={handleLogout}
               className="px-6 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-gray-400 hover:text-white transition-all"
             >
-              Sign out of session
+              Sign out of workspace
             </button>
           </motion.div>
         </main>
@@ -402,7 +402,7 @@ export default function App() {
     );
   }
 
-  // PUBLIC LANDING PAGE WITH BALANCED TOP-CENTER HEADING & CARDS
+  // PUBLIC LANDING PAGE
   return (
     <div className="min-h-screen bg-[#030712] text-gray-100 font-sans relative overflow-x-hidden selection:bg-cyan-500 selection:text-white">
       <AnimatePresence>
@@ -421,12 +421,12 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* Header with Top-Middle Brand Tagline */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#030712]/80 border-b border-white/10 px-4 sm:px-8 py-3.5">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-3 items-center">
+      {/* HEADER: Fully Responsive Layout */}
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#030712]/90 border-b border-white/10 px-4 sm:px-8 py-3.5">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
           
-          {/* Left: Brand Logo */}
-          <div className="flex items-center space-x-3 cursor-pointer group justify-start">
+          {/* Left: Logo */}
+          <div className="flex items-center space-x-3 cursor-pointer">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-400 via-blue-500 to-indigo-600 p-[1px] shadow-lg shadow-cyan-500/20">
               <div className="w-full h-full bg-[#0b1329] rounded-[11px] flex items-center justify-center">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400 font-black text-lg">Z</span>
@@ -438,19 +438,17 @@ export default function App() {
             </div>
           </div>
 
-          {/* Middle: Brand Tagline Heading */}
-          <div className="hidden md:flex justify-center items-center">
-            <div className="px-3.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-semibold flex items-center space-x-2 shadow-inner">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-              <span>Your next strategic move, intelligently faster.</span>
-            </div>
+          {/* Middle: Clear Center Tagline Heading */}
+          <div className="hidden lg:flex items-center space-x-2 px-3.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-medium">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+            <span>Your next strategic move, intelligently faster.</span>
           </div>
 
-          {/* Right: Auth Buttons */}
-          <div className="flex items-center space-x-3 sm:space-x-4 justify-end">
+          {/* Right: Actions */}
+          <div className="flex items-center space-x-3">
             <button 
               onClick={() => { setIsSignUp(false); setIsForgotPassword(false); setShowAuthModal(true); }}
-              className="px-4 py-2 text-xs font-semibold text-gray-300 hover:text-white transition-colors"
+              className="px-3.5 py-1.5 text-xs font-semibold text-gray-300 hover:text-white transition-colors"
             >
               Sign In
             </button>
@@ -458,7 +456,7 @@ export default function App() {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => { setIsSignUp(true); setIsForgotPassword(false); setShowAuthModal(true); }}
-              className="px-4 sm:px-5 py-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 text-white font-medium text-xs sm:text-sm shadow-lg shadow-blue-600/25 transition-all flex items-center gap-1.5"
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 text-white font-medium text-xs shadow-lg shadow-blue-600/25 flex items-center space-x-1.5"
             >
               <span>Get Started</span>
               <ArrowRight className="w-4 h-4" />
@@ -468,8 +466,8 @@ export default function App() {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative pt-12 sm:pt-16 pb-10 px-4 sm:px-6 max-w-4xl mx-auto text-center">
+      {/* HERO SECTION */}
+      <section className="pt-12 sm:pt-16 pb-10 px-4 sm:px-6 max-w-4xl mx-auto text-center">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-[11px] font-semibold mb-6 shadow-inner">
             <Zap className="w-3.5 h-3.5 text-cyan-400" />
@@ -497,8 +495,55 @@ export default function App() {
         </motion.div>
       </section>
 
-      {/* INTERACTIVE CARD 1: LIVE STRATEGY SIMULATOR */}
-      <section className="px-4 sm:px-6 pb-12 max-w-4xl mx-auto">
+      {/* SIMPLIFIED EXPLANATION FEATURE CARDS (GRID FOR ALL DEVICES) */}
+      <section className="px-4 sm:px-6 md:px-8 pb-12 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          <div className="p-5 rounded-2xl bg-[#080d1a] border border-white/10 hover:border-cyan-500/30 transition-all">
+            <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 w-fit mb-3">
+              <Zap className="w-5 h-5" />
+            </div>
+            <h3 className="text-sm font-bold text-white mb-1">Instant 88ms Speed</h3>
+            <p className="text-xs text-gray-400 leading-relaxed">
+              No waiting 30 seconds. Get market reports instantly using ultra-fast Groq hardware chips.
+            </p>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-[#080d1a] border border-white/10 hover:border-cyan-500/30 transition-all">
+            <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-400 w-fit mb-3">
+              <Search className="w-5 h-5" />
+            </div>
+            <h3 className="text-sm font-bold text-white mb-1">Competitor Radar</h3>
+            <p className="text-xs text-gray-400 leading-relaxed">
+              Find blind spots and missing opportunities that your competitors are ignoring in your industry.
+            </p>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-[#080d1a] border border-white/10 hover:border-cyan-500/30 transition-all">
+            <div className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400 w-fit mb-3">
+              <Target className="w-5 h-5" />
+            </div>
+            <h3 className="text-sm font-bold text-white mb-1">8-Week Roadmaps</h3>
+            <p className="text-xs text-gray-400 leading-relaxed">
+              Get step-by-step action plans showing exactly what to launch week by week.
+            </p>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-[#080d1a] border border-white/10 hover:border-cyan-500/30 transition-all">
+            <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 w-fit mb-3">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <h3 className="text-sm font-bold text-white mb-1">Zero Data Kept</h3>
+            <p className="text-xs text-gray-400 leading-relaxed">
+              Your strategy data is completely private and never saved or shared with anyone else.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      {/* INTERACTIVE DEMO SIMULATOR CARD */}
+      <section className="px-4 sm:px-6 md:px-8 pb-12 max-w-4xl mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: 20 }} 
           whileInView={{ opacity: 1, y: 0 }} 
@@ -510,15 +555,15 @@ export default function App() {
               <Play className="w-5 h-5 fill-cyan-400" />
             </div>
             <div>
-              <h2 className="text-lg sm:text-xl font-bold text-white">Interactive Strategy Simulator</h2>
-              <p className="text-xs text-gray-400">Test drive the Groq LPU engine on any sample business instantly.</p>
+              <h2 className="text-lg sm:text-xl font-bold text-white">Test Drive the Strategy Engine</h2>
+              <p className="text-xs text-gray-400">Type any brand name below to see instant intelligence in action.</p>
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-3 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
             <input 
               type="text" 
-              placeholder="e.g., Lumina Coffee, Acme SaaS"
+              placeholder="Enter brand name (e.g. Lumina Coffee)"
               value={demoInput}
               onChange={(e) => setDemoInput(e.target.value)}
               className="sm:col-span-2 px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400"
@@ -543,7 +588,7 @@ export default function App() {
             {isSimulating ? (
               <>
                 <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span>Scanning Groq LPUs...</span>
+                <span>Analyzing Market...</span>
               </>
             ) : (
               <>
@@ -573,14 +618,14 @@ export default function App() {
                   <span className="text-cyan-400 font-bold">{simulatedReport.opportunityScore}</span>
                 </div>
               </div>
-              <p className="text-gray-300 pt-1"><strong>Primary Gap:</strong> {simulatedReport.keyGap}</p>
+              <p className="text-gray-300 pt-1"><strong>Market Gap:</strong> {simulatedReport.keyGap}</p>
             </motion.div>
           )}
         </motion.div>
       </section>
 
-      {/* INTERACTIVE CARD 2: STRATEGY & COMPETITOR MATRIX (REPLACES SAVINGS CALCULATOR) */}
-      <section className="px-4 sm:px-6 pb-12 max-w-4xl mx-auto">
+      {/* INTERACTIVE MARKET MATRIX CARD */}
+      <section className="px-4 sm:px-6 md:px-8 pb-12 max-w-4xl mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: 20 }} 
           whileInView={{ opacity: 1, y: 0 }} 
@@ -592,49 +637,49 @@ export default function App() {
               <Compass className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg sm:text-xl font-bold text-white">Market Intelligence Engine</h2>
-              <p className="text-xs text-gray-400">Explore how ZyrisAI evaluates market landscapes in real time.</p>
+              <h2 className="text-lg sm:text-xl font-bold text-white">Live Intelligence Matrix</h2>
+              <p className="text-xs text-gray-400">Click below to see how ZyrisAI breaks down market information simply.</p>
             </div>
           </div>
 
-          <div className="flex space-x-2 border-b border-white/10 pb-3 mb-6">
+          <div className="flex space-x-2 border-b border-white/10 pb-3 mb-6 overflow-x-auto">
             <button 
               onClick={() => setActiveTab('swot')} 
-              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${activeTab === 'swot' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'text-gray-400 hover:text-white'}`}
+              className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${activeTab === 'swot' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'text-gray-400 hover:text-white'}`}
             >
-              SWOT Matrix
+              SWOT Analysis
             </button>
             <button 
               onClick={() => setActiveTab('whitespace')} 
-              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${activeTab === 'whitespace' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'text-gray-400 hover:text-white'}`}
+              className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${activeTab === 'whitespace' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'text-gray-400 hover:text-white'}`}
             >
-              Whitespace Gap
+              Market Gaps
             </button>
             <button 
               onClick={() => setActiveTab('roadmap')} 
-              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${activeTab === 'roadmap' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'text-gray-400 hover:text-white'}`}
+              className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${activeTab === 'roadmap' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'text-gray-400 hover:text-white'}`}
             >
-              8-Week Execution
+              Action Plan
             </button>
           </div>
 
           {activeTab === 'swot' && (
-            <div className="grid sm:grid-cols-2 gap-3 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               <div className="p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/20">
                 <span className="font-bold text-emerald-400 block mb-1">Strengths</span>
-                <p className="text-gray-300">High brand trust and sub-100ms processing speed leverage.</p>
+                <p className="text-gray-300">Fast delivery speed and direct customer loyalty.</p>
               </div>
               <div className="p-4 rounded-2xl bg-amber-500/5 border border-amber-500/20">
                 <span className="font-bold text-amber-400 block mb-1">Weaknesses</span>
-                <p className="text-gray-300">Early stage user acquisition funnel and brand recognition.</p>
+                <p className="text-gray-300">Limited online marketing reach compared to big competitors.</p>
               </div>
               <div className="p-4 rounded-2xl bg-cyan-500/5 border border-cyan-500/20">
                 <span className="font-bold text-cyan-400 block mb-1">Opportunities</span>
-                <p className="text-gray-300">Expansion into automated B2B SaaS competitor benchmarking.</p>
+                <p className="text-gray-300">High demand for automated subscription services in your sector.</p>
               </div>
               <div className="p-4 rounded-2xl bg-rose-500/5 border border-rose-500/20">
                 <span className="font-bold text-rose-400 block mb-1">Threats</span>
-                <p className="text-gray-300">Rapidly evolving open-source model ecosystem.</p>
+                <p className="text-gray-300">New low-cost competitors entering the market.</p>
               </div>
             </div>
           )}
@@ -642,11 +687,11 @@ export default function App() {
           {activeTab === 'whitespace' && (
             <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/10 text-xs space-y-2">
               <div className="flex justify-between items-center text-cyan-300 font-semibold border-b border-white/10 pb-2">
-                <span>Identified Market Gap</span>
-                <span className="text-emerald-400 font-mono">HIGH IMPACT</span>
+                <span>Top Untapped Opportunity</span>
+                <span className="text-emerald-400 font-mono">HIGH VALUE</span>
               </div>
               <p className="text-gray-300 leading-relaxed">
-                Most market players take 3-5 business days for strategy briefs. ZyrisAI satisfies the need for instant real-time market analysis under 100 milliseconds.
+                Most traditional solutions take days to deliver reports. ZyrisAI solves this by giving you full market analysis in under 100 milliseconds.
               </p>
             </div>
           )}
@@ -654,15 +699,15 @@ export default function App() {
           {activeTab === 'roadmap' && (
             <div className="space-y-2 text-xs">
               <div className="p-3 rounded-xl bg-white/[0.02] border border-white/10 flex justify-between items-center">
-                <span className="text-gray-300">Week 1-2: Competitor Footprint Scan</span>
-                <span className="text-cyan-400 font-mono font-bold">COMPLETED</span>
+                <span className="text-gray-300">Weeks 1–2: Competitor Scan & Setup</span>
+                <span className="text-cyan-400 font-mono font-bold">READY</span>
               </div>
               <div className="p-3 rounded-xl bg-white/[0.02] border border-white/10 flex justify-between items-center">
-                <span className="text-gray-300">Week 3-4: Customer Sentiment Synthesis</span>
-                <span className="text-emerald-400 font-mono font-bold">IN PROGRESS</span>
+                <span className="text-gray-300">Weeks 3–4: Feature Launch & Automation</span>
+                <span className="text-emerald-400 font-mono font-bold">NEXT</span>
               </div>
               <div className="p-3 rounded-xl bg-white/[0.02] border border-white/10 flex justify-between items-center">
-                <span className="text-gray-300">Week 5-8: Go-To-Market Execution Campaign</span>
+                <span className="text-gray-300">Weeks 5–8: Scale Customer Acquisition</span>
                 <span className="text-gray-500 font-mono font-bold">PLANNED</span>
               </div>
             </div>
@@ -670,14 +715,14 @@ export default function App() {
         </motion.div>
       </section>
 
-      {/* INTERACTIVE CARD 3: FAQ ACCORDION */}
-      <section className="px-4 sm:px-6 pb-20 max-w-4xl mx-auto">
+      {/* FAQ SECTION */}
+      <section className="px-4 sm:px-6 md:px-8 pb-20 max-w-4xl mx-auto">
         <h2 className="text-xl sm:text-2xl font-bold text-white text-center mb-6">Frequently Asked Questions</h2>
         <div className="space-y-3">
           {[
-            { q: "How fast is the sub-100ms reasoning engine?", a: "By leveraging Groq LPU hardware acceleration, ZyrisAI compiles market intelligence briefings in 88ms to 120ms—over 50x faster than traditional LLM chains." },
-            { q: "Is my business strategy data private?", a: "Yes! We operate on a strict Zero Data Retention model. Queries run in memory and are never saved or used to train public models." },
-            { q: "How many free trial credits do I get?", a: "Every new account receives 2 free full-length strategy briefs upon account creation." }
+            { q: "How fast does ZyrisAI generate market reports?", a: "Reports generate in under 100 milliseconds (88ms average)—over 50 times faster than standard tools." },
+            { q: "Is my company data private?", a: "Yes. We use a Zero Data Retention model, meaning your inputs are processed securely in memory and never saved." },
+            { q: "How many free credits do I get on sign-up?", a: "Every new account receives 2 free trial credits immediately upon sign-up." }
           ].map((item, idx) => (
             <div key={idx} className="rounded-2xl bg-[#080d1a] border border-white/10 overflow-hidden">
               <button 
