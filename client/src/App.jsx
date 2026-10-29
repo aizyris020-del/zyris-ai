@@ -85,16 +85,6 @@ export default function App() {
   // 3. Interactive FAQ Accordion State
   const [openFaq, setOpenFaq] = useState(null);
 
-  // 4. Live LPU Hardware Latency Ticker State
-  const [engineSpeed, setEngineSpeed] = useState(88);
-
-  useEffect(() => {
-    const tickerInterval = setInterval(() => {
-      setEngineSpeed(Math.floor(82 + Math.random() * 12));
-    }, 2500);
-    return () => clearInterval(tickerInterval);
-  }, []);
-
   const showToast = (message, type = 'info') => {
     setToast({ message, type });
     setTimeout(() => {
@@ -180,9 +170,9 @@ export default function App() {
         growthPotential: '+38.4%',
         opportunityScore: '92/100',
         keyGap: `High demand for automated ${demoIndustry} delivery loops`,
-        executionTime: `${engineSpeed}ms`
+        executionTime: '88ms'
       });
-      showToast(`Instant demo intelligence generated in ${engineSpeed}ms!`, 'success');
+      showToast('Instant demo intelligence generated in 88ms!', 'success');
     }, 1200);
   };
 
@@ -492,7 +482,7 @@ export default function App() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative pt-12 sm:pt-20 pb-8 sm:pb-12 px-4 sm:px-6 max-w-4xl mx-auto text-center">
+      <section className="relative pt-12 sm:pt-20 pb-12 sm:pb-16 px-4 sm:px-6 max-w-4xl mx-auto text-center">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-[11px] font-semibold mb-6 shadow-inner">
             <Zap className="w-3.5 h-3.5 text-cyan-400" />
@@ -510,69 +500,6 @@ export default function App() {
             Turn any business or industry vertical into your next strategic advantage. Surface market shifts, competitor blind spots, and instant execution roadmaps.
           </p>
         </motion.div>
-      </section>
-
-      {/* NEW ATTRACTIVE ELEMENT #1: LIVE PERFORMANCE METRIC TICKER */}
-      <section className="px-4 sm:px-6 pb-12 max-w-4xl mx-auto">
-        <motion.div 
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-2xl bg-[#080d1a] border border-cyan-500/20 shadow-xl text-center"
-        >
-          <div className="p-2">
-            <span className="text-[10px] text-gray-400 uppercase font-mono block mb-1">Reasoning Speed</span>
-            <span className="text-xl font-black text-cyan-400 font-mono">{engineSpeed} ms</span>
-          </div>
-          <div className="p-2 border-l border-white/5">
-            <span className="text-[10px] text-gray-400 uppercase font-mono block mb-1">Hardware</span>
-            <span className="text-xl font-bold text-white">Groq LPU</span>
-          </div>
-          <div className="p-2 border-l border-white/5">
-            <span className="text-[10px] text-gray-400 uppercase font-mono block mb-1">Precision</span>
-            <span className="text-xl font-bold text-emerald-400">99.4%</span>
-          </div>
-          <div className="p-2 border-l border-white/5">
-            <span className="text-[10px] text-gray-400 uppercase font-mono block mb-1">Data Model</span>
-            <span className="text-xl font-bold text-indigo-400">Zero Retain</span>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* NEW ATTRACTIVE ELEMENT #2: INTERACTIVE PIPELINE VISUALIZER */}
-      <section className="px-4 sm:px-6 pb-16 max-w-4xl mx-auto">
-        <div className="p-6 sm:p-8 rounded-3xl bg-[#080d1a] border border-cyan-500/20 shadow-2xl">
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
-              <Cpu className="w-5 h-5" />
-            </div>
-            <div>
-              <h2 className="text-lg sm:text-xl font-bold text-white">Groq LPU Processing Pipeline</h2>
-              <p className="text-xs text-gray-400">Inspect the sub-100ms execution stages driving ZyrisAI.</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {[
-              { step: "01", title: "Ingestion & Vectorizing", detail: "Scans raw market signals and competitor sites in <12ms.", badge: "12ms" },
-              { step: "02", title: "Groq LPU Reasoning", detail: "Compiles SWOT and opportunity matrix via sub-100ms inference.", badge: "64ms" },
-              { step: "03", title: "Roadmap Generation", detail: "Outputs 8-week execution plan with prioritized impact scores.", badge: "12ms" }
-            ].map((item, idx) => (
-              <motion.div 
-                key={idx}
-                whileHover={{ scale: 1.02 }}
-                className="p-4 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-cyan-500/40 transition-all cursor-pointer"
-              >
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-[10px] font-mono text-cyan-400 font-bold">STAGE {item.step}</span>
-                  <span className="text-[10px] font-mono bg-cyan-500/10 text-cyan-300 px-2 py-0.5 rounded-full border border-cyan-500/20">{item.badge}</span>
-                </div>
-                <h3 className="text-xs font-bold text-white mb-1">{item.title}</h3>
-                <p className="text-[11px] text-gray-400 leading-relaxed">{item.detail}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
       </section>
 
       {/* INTERACTIVE FEATURE #1: LIVE DEMO SIMULATOR */}
@@ -707,32 +634,6 @@ export default function App() {
             </button>
           </div>
         </motion.div>
-      </section>
-
-      {/* NEW ATTRACTIVE ELEMENT #3: COMPARISON MATRIX GRID */}
-      <section className="px-4 sm:px-6 pb-16 max-w-4xl mx-auto">
-        <div className="p-6 sm:p-8 rounded-3xl bg-[#080d1a] border border-white/10 shadow-2xl">
-          <h2 className="text-lg sm:text-xl font-bold text-white text-center mb-6">Why High-Growth Teams Choose ZyrisAI</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="p-5 rounded-2xl bg-rose-500/5 border border-rose-500/20">
-              <span className="text-xs font-bold text-rose-400 block mb-3 uppercase tracking-wider">Traditional LLM Chains</span>
-              <ul className="space-y-2.5 text-xs text-gray-400">
-                <li className="flex items-center space-x-2"><X className="w-4 h-4 text-rose-400 shrink-0" /><span>15-30s latency per query</span></li>
-                <li className="flex items-center space-x-2"><X className="w-4 h-4 text-rose-400 shrink-0" /><span>Generic surface-level output</span></li>
-                <li className="flex items-center space-x-2"><X className="w-4 h-4 text-rose-400 shrink-0" /><span>Data stored and retained</span></li>
-              </ul>
-            </div>
-
-            <div className="p-5 rounded-2xl bg-cyan-500/10 border border-cyan-500/30">
-              <span className="text-xs font-bold text-cyan-300 block mb-3 uppercase tracking-wider">ZyrisAI LPU Engine</span>
-              <ul className="space-y-2.5 text-xs text-gray-200">
-                <li className="flex items-center space-x-2"><Check className="w-4 h-4 text-emerald-400 shrink-0" /><span>Sub-100ms instant execution</span></li>
-                <li className="flex items-center space-x-2"><Check className="w-4 h-4 text-emerald-400 shrink-0" /><span>Deep SWOT & prioritized gaps</span></li>
-                <li className="flex items-center space-x-2"><Check className="w-4 h-4 text-emerald-400 shrink-0" /><span>Strict zero-data retention</span></li>
-              </ul>
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* INTERACTIVE FEATURE #3: FAQ ACCORDION */}
