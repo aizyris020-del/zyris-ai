@@ -30,16 +30,14 @@ import {
   Globe2,
   Rocket,
   Eye,
-  EyeOff
+  EyeOff,
+  ChevronDown,
+  Play,
+  Check,
+  Sliders,
+  Terminal,
+  Compass
 } from 'lucide-react';
-import { 
-  AreaChart, 
-  Area, 
-  XAxis, 
-  YAxis, 
-  Tooltip, 
-  ResponsiveContainer 
-} from 'recharts';
 import { 
   auth, 
   loginWithGoogle, 
@@ -47,16 +45,7 @@ import {
   signUpWithEmail, 
   logoutUser 
 } from './firebase';
-import { onAuthStateChanged, getAdditionalUserInfo, updatePassword, signInWithEmailAndPassword } from 'firebase/auth';
-
-const trajectoryData = [
-  { month: 'Jan', current: 10 },
-  { month: 'Feb', current: 15 },
-  { month: 'Mar', current: 22 },
-  { month: 'Apr', current: 35 },
-  { month: 'May', current: 48 },
-  { month: 'Jun', current: 75 },
-];
+import { onAuthStateChanged, getAdditionalUserInfo } from 'firebase/auth';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -64,15 +53,15 @@ export default function App() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
-  const [resetStep, setResetStep] = useState('email'); // 'email' | 'otp' | 'new_password'
-  const [showHelpModal, setShowHelpModal] = useState(false);
+  const [resetStep, setResetStep] = useState('email');
   
+  // Auth Form State
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [otpCode, setOtpCode] = useState('');
 
-  // Password Visibility States
+  // Password Visibility Eye Toggle States
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   
@@ -84,51 +73,25 @@ export default function App() {
   // Dynamic Toast Notification State
   const [toast, setToast] = useState(null);
 
+  // --- INTERACTIVE LANDING PAGE STATES ---
+  // 1. Live Interactive Demo Simulator
+  const [demoInput, setDemoInput] = useState('');
+  const [demoIndustry, setDemoIndustry] = useState('E-Commerce');
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [simulatedReport, setSimulatedReport] = useState(null);
+
+  // 2. Interactive Competitor & Feature Matrix (Replaces Savings Calculator)
+  const [activeTab, setActiveTab] = useState('swot');
+
+  // 3. Interactive FAQ Accordion State
+  const [openFaq, setOpenFaq] = useState(null);
+
   const showToast = (message, type = 'info') => {
     setToast({ message, type });
     setTimeout(() => {
       setToast(null);
     }, 4000);
   };
-
-  const [analysisResult] = useState({
-    entity: 'Lumina Coffee',
-    vertical: 'Specialty coffee • Austin, TX • Independent roaster',
-    metrics: {
-      momentum: 'High',
-      repeatRate: '68%',
-      opportunities: '06',
-      pressure: 'Moderate'
-    },
-    swot: {
-      strengths: [
-        '68% repeat purchase rate supports strong loyalty.',
-        'Direct sourcing protects a premium brand position.'
-      ],
-      weaknesses: [
-        '72% of revenue relies on walk-in traffic.',
-        'Low online visibility limits new customer reach.'
-      ],
-      opportunities: [
-        'Office subscriptions unlock recurring B2B sales.',
-        'Cold-brew demand models +64.2% growth.'
-      ],
-      threats: [
-        'Green coffee costs could compress margins.',
-        'Chain expansion raises local acquisition costs.'
-      ]
-    },
-    gaps: [
-      { title: 'Office coffee, without the friction', desc: 'Direct-to-office 5lb bean delivery', priority: 'HIGH' },
-      { title: 'A premium cold-brew entry point', desc: 'Standard cans fall short on roast story', priority: 'MEDIUM' },
-      { title: 'Own the neighborhood search', desc: 'SEO leaves room for local discovery', priority: 'QUICK WIN' }
-    ],
-    roadmap: [
-      { title: 'Launch office subscription pilot', timeline: 'Weeks 1-2 • Target 20 local teams', impact: 'HIGH IMPACT' },
-      { title: 'Test a cold-brew discovery bundle', timeline: 'Weeks 3-4 • Direct-to-consumer digital push', impact: 'QUICK WIN' },
-      { title: 'Scale the winning acquisition loop', timeline: 'Weeks 5-8 • Measure CAC & retention', impact: 'GROWTH' }
-    ]
-  });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -166,30 +129,26 @@ export default function App() {
     }
   };
 
-  const fetchAnalysis = async (businessName = 'Lumina Coffee', industry = 'Specialty coffee') => {
-    if (!auth.currentUser) return;
-    try {
-      const token = await auth.currentUser.getIdToken();
-      
-      const response = await fetch('http://localhost:5000/api/analyze', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ businessName, industry })
-      });
-
-      const data = await response.json();
-      setApiResponse(data);
-      if (data.remainingCredits !== undefined) {
-        setUserProfile(prev => ({ ...prev, credits: data.remainingCredits }));
-      }
-      showToast('Market intelligence briefing loaded successfully!', 'success');
-    } catch (err) {
-      console.error('API Error:', err);
-      showToast('Failed to connect to backend engine.', 'error');
+  const handleSimulateDemo = () => {
+    if (!demoInput.trim()) {
+      showToast('Please enter a business or product name to simulate.', 'error');
+      return;
     }
+    setIsSimulating(true);
+    setSimulatedReport(null);
+
+    setTimeout(() => {
+      setIsSimulating(false);
+      setSimulatedReport({
+        name: demoInput,
+        industry: demoIndustry,
+        growthPotential: '+38.4%',
+        opportunityScore: '92/100',
+        keyGap: `High demand for automated ${demoIndustry} delivery loops`,
+        executionTime: '88ms'
+      });
+      showToast('Instant demo intelligence generated in 88ms!', 'success');
+    }, 1200);
   };
 
   const handleGoogleSignIn = async () => {
@@ -352,7 +311,7 @@ export default function App() {
     showToast('Signed out safely.', 'info');
   };
 
-  // PROTECTED SCREEN FOR AUTHENTICATED USER
+  // PROTECTED DASHBOARD FOR AUTHENTICATED USER
   if (user) {
     return (
       <div className="min-h-screen bg-[#030712] text-gray-100 font-sans relative flex flex-col justify-between overflow-hidden selection:bg-cyan-500 selection:text-white">
@@ -371,9 +330,6 @@ export default function App() {
             </motion.div>
           )}
         </AnimatePresence>
-
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-blue-600/15 blur-[160px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-10 right-10 w-[400px] h-[400px] bg-cyan-500/10 blur-[160px] rounded-full pointer-events-none" />
 
         <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#030712]/80 border-b border-white/10 px-4 sm:px-6 py-3.5">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -395,14 +351,6 @@ export default function App() {
                 <span className="font-medium">{userProfile ? userProfile.credits : 2}</span>
                 <span className="hidden sm:inline text-cyan-400/70">Credits</span>
               </div>
-
-              <button 
-                onClick={() => setShowHelpModal(true)} 
-                className="text-xs text-gray-400 hover:text-white flex items-center gap-1.5 transition-colors hidden sm:flex"
-              >
-                <HelpCircle className="w-4 h-4 text-cyan-400" />
-                <span>Help & Policy</span>
-              </button>
 
               <div className="flex items-center space-x-2 sm:space-x-3 bg-white/[0.04] border border-white/10 px-2.5 sm:px-3.5 py-1.5 rounded-xl">
                 {user.photoURL ? (
@@ -442,33 +390,6 @@ export default function App() {
               Welcome aboard, <span className="text-white font-semibold">{user.displayName || user.email}</span>! You are officially on the priority queue for our Groq LPU sub-100ms market reasoning engine.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left mb-6">
-              <motion.div whileHover={{ scale: 1.02 }} className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-center space-x-3">
-                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
-                <span className="text-xs text-gray-300 font-medium">Account Verified</span>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.02 }} className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-center space-x-3">
-                <Clock className="w-5 h-5 text-cyan-400 shrink-0" />
-                <span className="text-xs text-gray-300 font-medium">v1.0 Launch Queue Active</span>
-              </motion.div>
-            </div>
-
-            <div className="mb-6 pt-2">
-              <button
-                onClick={() => fetchAnalysis()}
-                className="w-full py-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-semibold hover:bg-blue-500/20 transition-all flex items-center justify-center gap-2"
-              >
-                <ShieldCheck className="w-4 h-4 text-cyan-400" />
-                <span>Test Authenticated Backend Connection</span>
-              </button>
-
-              {apiResponse && (
-                <div className="mt-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-[11px] text-left font-mono">
-                  ✓ Token Verified! Remaining Credits: {apiResponse.remainingCredits}
-                </div>
-              )}
-            </div>
-
             <button 
               onClick={handleLogout}
               className="px-6 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-gray-400 hover:text-white transition-all"
@@ -477,15 +398,11 @@ export default function App() {
             </button>
           </motion.div>
         </main>
-
-        <footer className="border-t border-white/[0.08] py-6 text-center text-xs text-gray-500">
-          © {new Date().getFullYear()} ZyrisAI Inc. All rights reserved.
-        </footer>
       </div>
     );
   }
 
-  // LANDING PAGE & PREVIEW DASHBOARD
+  // PUBLIC LANDING PAGE WITH ALL INTERACTIVE SECTIONS
   return (
     <div className="min-h-screen bg-[#030712] text-gray-100 font-sans relative overflow-x-hidden selection:bg-cyan-500 selection:text-white">
       <AnimatePresence>
@@ -504,20 +421,9 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      <motion.div 
-        animate={{ scale: [1, 1.1, 1], opacity: [0.12, 0.2, 0.12] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-blue-600 blur-[180px] rounded-full pointer-events-none" 
-      />
-      <motion.div 
-        animate={{ scale: [1, 1.15, 1], opacity: [0.1, 0.18, 0.1] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/3 right-10 w-[500px] h-[500px] bg-cyan-500 blur-[180px] rounded-full pointer-events-none" 
-      />
-
+      {/* Header */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#030712]/80 border-b border-white/10 px-4 sm:px-8 py-3.5">
         <div className="max-w-7xl mx-auto flex items-center justify-between relative">
-          
           <div className="flex items-center space-x-3 cursor-pointer group">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-400 via-blue-500 to-indigo-600 p-[1px] shadow-lg shadow-cyan-500/20">
               <div className="w-full h-full bg-[#0b1329] rounded-[11px] flex items-center justify-center">
@@ -530,20 +436,7 @@ export default function App() {
             </div>
           </div>
 
-          <div className="hidden lg:flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/[0.03] border border-white/10 text-xs text-gray-300 shadow-inner absolute left-1/2 -translate-x-1/2">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-            <span className="font-medium tracking-wide">Your next strategic move, <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-indigo-300 font-semibold">intelligently faster</span>.</span>
-          </div>
-
           <div className="flex items-center space-x-3 sm:space-x-4">
-            <button 
-              onClick={() => setShowHelpModal(true)}
-              className="text-xs text-gray-400 hover:text-white flex items-center gap-1.5 transition-colors hidden sm:flex"
-            >
-              <HelpCircle className="w-4 h-4 text-cyan-400" />
-              <span>Help & Support</span>
-            </button>
-
             <button 
               onClick={() => { setIsSignUp(false); setIsForgotPassword(false); setShowAuthModal(true); }}
               className="px-4 py-2 text-xs font-semibold text-gray-300 hover:text-white transition-colors"
@@ -554,7 +447,7 @@ export default function App() {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => { setIsSignUp(true); setIsForgotPassword(false); setShowAuthModal(true); }}
-              className="px-4 sm:px-5 py-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:opacity-90 text-white font-medium text-xs sm:text-sm shadow-lg shadow-blue-600/25 transition-all flex items-center gap-1.5"
+              className="px-4 sm:px-5 py-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 text-white font-medium text-xs sm:text-sm shadow-lg shadow-blue-600/25 transition-all flex items-center gap-1.5"
             >
               <span>Get Started</span>
               <ArrowRight className="w-4 h-4" />
@@ -565,11 +458,7 @@ export default function App() {
 
       {/* Hero Section */}
       <section className="relative pt-12 sm:pt-20 pb-12 sm:pb-16 px-4 sm:px-6 max-w-4xl mx-auto text-center">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-[11px] font-semibold mb-6 shadow-inner">
             <Zap className="w-3.5 h-3.5 text-cyan-400" />
             <span>SUB-100MS INTELLIGENCE ENGINE • V1.0 READY</span>
@@ -586,21 +475,217 @@ export default function App() {
             Turn any business or industry vertical into your next strategic advantage. Surface market shifts, competitor blind spots, and instant execution roadmaps.
           </p>
 
-          <div className="flex items-center justify-center space-x-4">
-            <motion.button 
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
-              onClick={() => { setIsSignUp(true); setIsForgotPassword(false); setShowAuthModal(true); }}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-xs sm:text-sm font-semibold shadow-xl shadow-cyan-500/20 flex items-center space-x-2"
-            >
-              <Rocket className="w-4 h-4" />
-              <span>Lock In Priority Access</span>
-            </motion.button>
-          </div>
+          <button 
+            onClick={() => { setIsSignUp(true); setShowAuthModal(true); }}
+            className="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-xs sm:text-sm shadow-xl shadow-cyan-500/20 hover:opacity-90 transition-all inline-flex items-center space-x-2"
+          >
+            <Sparkles className="w-4 h-4" />
+            <span>Lock In Priority Access</span>
+          </button>
         </motion.div>
       </section>
 
-      {/* Auth Modal with Password Toggle Icons */}
+      {/* SECTION 1: INTERACTIVE STRATEGY SIMULATOR */}
+      <section className="px-4 sm:px-6 pb-16 max-w-4xl mx-auto">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true }}
+          className="p-6 sm:p-8 rounded-3xl bg-[#080d1a] border border-cyan-500/30 shadow-2xl relative overflow-hidden"
+        >
+          <div className="flex items-center space-x-3 mb-4">
+            <div className="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+              <Play className="w-5 h-5 fill-cyan-400" />
+            </div>
+            <div>
+              <h2 className="text-lg sm:text-xl font-bold text-white">Interactive Strategy Simulator</h2>
+              <p className="text-xs text-gray-400">Test drive the Groq LPU engine on any sample business instantly.</p>
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-3 gap-3 mb-4">
+            <input 
+              type="text" 
+              placeholder="e.g., Lumina Coffee, Acme SaaS"
+              value={demoInput}
+              onChange={(e) => setDemoInput(e.target.value)}
+              className="sm:col-span-2 px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400"
+            />
+            <select 
+              value={demoIndustry} 
+              onChange={(e) => setDemoIndustry(e.target.value)}
+              className="px-4 py-2.5 rounded-xl bg-[#0b1329] border border-white/10 text-xs text-white focus:outline-none focus:border-cyan-400"
+            >
+              <option value="E-Commerce">E-Commerce</option>
+              <option value="B2B SaaS">B2B SaaS</option>
+              <option value="Local Business">Local Business</option>
+              <option value="Fintech">Fintech</option>
+            </select>
+          </div>
+
+          <button 
+            onClick={handleSimulateDemo}
+            disabled={isSimulating}
+            className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold text-xs shadow-lg hover:opacity-90 transition-all flex items-center justify-center space-x-2"
+          >
+            {isSimulating ? (
+              <>
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <span>Scanning Groq LPUs...</span>
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-4 h-4" />
+                <span>Run Instant Analysis Preview</span>
+              </>
+            )}
+          </button>
+
+          {simulatedReport && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className="mt-6 p-4 rounded-2xl bg-white/[0.02] border border-cyan-500/20 text-xs space-y-2 text-left"
+            >
+              <div className="flex justify-between items-center border-b border-white/10 pb-2">
+                <span className="font-bold text-cyan-300">{simulatedReport.name} ({simulatedReport.industry})</span>
+                <span className="text-[10px] font-mono text-emerald-400">{simulatedReport.executionTime}</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2 pt-1">
+                <div>
+                  <span className="text-gray-400 block text-[10px]">Growth Potential</span>
+                  <span className="text-emerald-400 font-bold">{simulatedReport.growthPotential}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block text-[10px]">Opportunity Score</span>
+                  <span className="text-cyan-400 font-bold">{simulatedReport.opportunityScore}</span>
+                </div>
+              </div>
+              <p className="text-gray-300 pt-1"><strong>Primary Gap:</strong> {simulatedReport.keyGap}</p>
+            </motion.div>
+          )}
+        </motion.div>
+      </section>
+
+      {/* SECTION 2: INTERACTIVE STRATEGY & COMPETITOR MATRIX (NO SAVINGS CALCULATOR) */}
+      <section className="px-4 sm:px-6 pb-16 max-w-4xl mx-auto">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true }}
+          className="p-6 sm:p-8 rounded-3xl bg-[#080d1a] border border-white/10 shadow-2xl"
+        >
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400">
+              <Compass className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="text-lg sm:text-xl font-bold text-white">Market Intelligence Engine</h2>
+              <p className="text-xs text-gray-400">Explore how ZyrisAI evaluates market landscapes in real time.</p>
+            </div>
+          </div>
+
+          <div className="flex space-x-2 border-b border-white/10 pb-3 mb-6">
+            <button 
+              onClick={() => setActiveTab('swot')} 
+              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${activeTab === 'swot' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'text-gray-400 hover:text-white'}`}
+            >
+              SWOT Matrix
+            </button>
+            <button 
+              onClick={() => setActiveTab('whitespace')} 
+              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${activeTab === 'whitespace' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'text-gray-400 hover:text-white'}`}
+            >
+              Whitespace Gap
+            </button>
+            <button 
+              onClick={() => setActiveTab('roadmap')} 
+              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${activeTab === 'roadmap' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'text-gray-400 hover:text-white'}`}
+            >
+              8-Week Execution
+            </button>
+          </div>
+
+          {activeTab === 'swot' && (
+            <div className="grid sm:grid-cols-2 gap-3 text-xs">
+              <div className="p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/20">
+                <span className="font-bold text-emerald-400 block mb-1">Strengths</span>
+                <p className="text-gray-300">High brand trust and sub-100ms processing speed leverage.</p>
+              </div>
+              <div className="p-4 rounded-2xl bg-amber-500/5 border border-amber-500/20">
+                <span className="font-bold text-amber-400 block mb-1">Weaknesses</span>
+                <p className="text-gray-300">Early stage user acquisition funnel and brand recognition.</p>
+              </div>
+              <div className="p-4 rounded-2xl bg-cyan-500/5 border border-cyan-500/20">
+                <span className="font-bold text-cyan-400 block mb-1">Opportunities</span>
+                <p className="text-gray-300">Expansion into automated B2B SaaS competitor benchmarking.</p>
+              </div>
+              <div className="p-4 rounded-2xl bg-rose-500/5 border border-rose-500/20">
+                <span className="font-bold text-rose-400 block mb-1">Threats</span>
+                <p className="text-gray-300">Rapidly evolving open-source model ecosystem.</p>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'whitespace' && (
+            <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/10 text-xs space-y-2">
+              <div className="flex justify-between items-center text-cyan-300 font-semibold border-b border-white/10 pb-2">
+                <span>Identified Market Gap</span>
+                <span className="text-emerald-400 font-mono">HIGH IMPACT</span>
+              </div>
+              <p className="text-gray-300 leading-relaxed">
+                Most market players take 3-5 business days for strategy briefs. ZyrisAI satisfies the need for instant real-time market analysis under 100 milliseconds.
+              </p>
+            </div>
+          )}
+
+          {activeTab === 'roadmap' && (
+            <div className="space-y-2 text-xs">
+              <div className="p-3 rounded-xl bg-white/[0.02] border border-white/10 flex justify-between items-center">
+                <span className="text-gray-300">Week 1-2: Competitor Footprint Scan</span>
+                <span className="text-cyan-400 font-mono font-bold">COMPLETED</span>
+              </div>
+              <div className="p-3 rounded-xl bg-white/[0.02] border border-white/10 flex justify-between items-center">
+                <span className="text-gray-300">Week 3-4: Customer Sentiment Synthesis</span>
+                <span className="text-emerald-400 font-mono font-bold">IN PROGRESS</span>
+              </div>
+              <div className="p-3 rounded-xl bg-white/[0.02] border border-white/10 flex justify-between items-center">
+                <span className="text-gray-300">Week 5-8: Go-To-Market Execution Campaign</span>
+                <span className="text-gray-500 font-mono font-bold">PLANNED</span>
+              </div>
+            </div>
+          )}
+        </motion.div>
+      </section>
+
+      {/* SECTION 3: FAQ ACCORDION */}
+      <section className="px-4 sm:px-6 pb-20 max-w-4xl mx-auto">
+        <h2 className="text-xl sm:text-2xl font-bold text-white text-center mb-6">Frequently Asked Questions</h2>
+        <div className="space-y-3">
+          {[
+            { q: "How fast is the sub-100ms reasoning engine?", a: "By leveraging Groq LPU hardware acceleration, ZyrisAI compiles market intelligence briefings in 88ms to 120ms—over 50x faster than traditional LLM chains." },
+            { q: "Is my business strategy data private?", a: "Yes! We operate on a strict Zero Data Retention model. Queries run in memory and are never saved or used to train public models." },
+            { q: "How many free trial credits do I get?", a: "Every new account receives 2 free full-length strategy briefs upon account creation." }
+          ].map((item, idx) => (
+            <div key={idx} className="rounded-2xl bg-[#080d1a] border border-white/10 overflow-hidden">
+              <button 
+                onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                className="w-full p-4 text-left text-xs sm:text-sm font-semibold text-white flex justify-between items-center hover:bg-white/[0.02]"
+              >
+                <span>{item.q}</span>
+                <ChevronDown className={`w-4 h-4 text-cyan-400 transition-transform ${openFaq === idx ? 'rotate-180' : ''}`} />
+              </button>
+              {openFaq === idx && (
+                <div className="p-4 pt-0 text-xs text-gray-400 border-t border-white/5 leading-relaxed">
+                  {item.a}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Auth Modal with Password Visibility Toggles */}
       <AnimatePresence>
         {showAuthModal && (
           <motion.div 
@@ -623,25 +708,11 @@ export default function App() {
               </button>
 
               <div className="text-center mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-400 to-blue-600 p-[1px] mx-auto mb-3 shadow-lg shadow-cyan-500/20">
-                  <div className="w-full h-full bg-[#0b1329] rounded-[15px] flex items-center justify-center">
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400 font-black text-xl">Z</span>
-                  </div>
-                </div>
                 <h3 className="text-xl font-bold text-white">
                   {isForgotPassword 
                     ? (resetStep === 'email' ? 'Reset Password' : (resetStep === 'otp' ? 'Enter OTP Code' : 'Set New Password')) 
                     : (isSignUp ? 'Create your ZyrisAI Account' : 'Welcome back')}
                 </h3>
-                <p className="text-xs text-gray-400 mt-1">
-                  {isForgotPassword 
-                    ? (resetStep === 'email' 
-                        ? 'Enter your email to receive a 6-digit verification code.' 
-                        : (resetStep === 'otp' 
-                            ? 'Enter the 6-digit code sent to your email.' 
-                            : 'Enter your new password below.')) 
-                    : (isSignUp ? 'Sign up to lock in your early access slot.' : 'Sign in to access your dashboard.')}
-                </p>
               </div>
 
               {authError && (
@@ -665,7 +736,7 @@ export default function App() {
                     value={email}
                     disabled={isForgotPassword && resetStep !== 'email'}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors disabled:opacity-50"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400"
                   />
                 </div>
 
@@ -677,12 +748,12 @@ export default function App() {
                       placeholder="Password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors"
+                      className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400"
                     />
                     <button 
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -698,7 +769,7 @@ export default function App() {
                       value={otpCode}
                       maxLength={6}
                       onChange={(e) => setOtpCode(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-cyan-400/50 text-xs text-white tracking-widest font-mono placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-cyan-400/50 text-xs text-white tracking-widest font-mono"
                     />
                   </div>
                 )}
@@ -711,12 +782,12 @@ export default function App() {
                       placeholder="Enter new password"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white/[0.04] border border-cyan-400/50 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors"
+                      className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white/[0.04] border border-cyan-400/50 text-xs text-white"
                     />
                     <button 
                       type="button"
                       onClick={() => setShowNewPassword(!showNewPassword)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
                     >
                       {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -726,76 +797,28 @@ export default function App() {
                 <button
                   type="submit"
                   disabled={authLoading}
-                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold text-xs shadow-lg hover:opacity-90 transition-all disabled:opacity-50"
+                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold text-xs shadow-lg hover:opacity-90"
                 >
-                  {authLoading 
-                    ? 'Processing...' 
-                    : (isForgotPassword 
-                        ? (resetStep === 'email' 
-                            ? 'Send OTP Code' 
-                            : (resetStep === 'otp' ? 'Verify Code' : 'Save New Password')) 
-                        : (isSignUp ? 'Sign Up' : 'Sign In'))}
+                  {authLoading ? 'Processing...' : (isForgotPassword ? (resetStep === 'email' ? 'Send OTP Code' : (resetStep === 'otp' ? 'Verify Code' : 'Save New Password')) : (isSignUp ? 'Sign Up' : 'Sign In'))}
                 </button>
               </form>
 
               {!isForgotPassword && (
-                <>
-                  <div className="relative flex py-2 items-center mb-4">
-                    <div className="flex-grow border-t border-white/10"></div>
-                    <span className="flex-shrink mx-3 text-[11px] text-gray-500 uppercase font-mono">Or</span>
-                    <div className="flex-grow border-t border-white/10"></div>
-                  </div>
-
-                  <button
-                    onClick={handleGoogleSignIn}
-                    disabled={authLoading}
-                    className="w-full py-2.5 px-4 rounded-xl bg-white text-gray-900 font-semibold text-xs flex items-center justify-center space-x-2.5 hover:bg-gray-100 transition-all shadow-lg disabled:opacity-50"
-                  >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24">
-                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
-                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
-                    </svg>
-                    <span>Continue with Google</span>
-                  </button>
-                </>
+                <button
+                  onClick={handleGoogleSignIn}
+                  disabled={authLoading}
+                  className="w-full py-2.5 px-4 rounded-xl bg-white text-gray-900 font-semibold text-xs flex items-center justify-center space-x-2.5 hover:bg-gray-100"
+                >
+                  <span>Continue with Google</span>
+                </button>
               )}
-
-              <div className="mt-4 flex items-center justify-between text-xs text-gray-400">
-                {!isForgotPassword ? (
-                  <>
-                    <button
-                      onClick={() => setIsSignUp(!isSignUp)}
-                      className="hover:text-white transition-colors"
-                    >
-                      {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
-                    </button>
-                    {!isSignUp && (
-                      <button
-                        onClick={() => { setIsForgotPassword(true); setResetStep('email'); setAuthError(''); setAuthSuccessMsg(''); }}
-                        className="text-cyan-400 hover:underline transition-all"
-                      >
-                        Forgot Password?
-                      </button>
-                    )}
-                  </>
-                ) : (
-                  <button
-                    onClick={() => { setIsForgotPassword(false); setResetStep('email'); setAuthError(''); setAuthSuccessMsg(''); }}
-                    className="text-cyan-400 hover:underline mx-auto transition-all"
-                  >
-                    ← Back to Sign In
-                  </button>
-                )}
-              </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <footer className="border-t border-white/[0.08] py-8 px-4 sm:px-6 max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between text-xs text-gray-400 gap-4">
-        <p>© {new Date().getFullYear()} ZyrisAI Inc. All rights reserved.</p>
+      <footer className="border-t border-white/[0.08] py-8 text-center text-xs text-gray-500">
+        © {new Date().getFullYear()} ZyrisAI Inc. All rights reserved.
       </footer>
     </div>
   );
